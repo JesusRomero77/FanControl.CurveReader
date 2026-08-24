@@ -31,4 +31,4 @@ The sensor named "Logger - Curve Reader" is created only to comply with the Fan 
 
 ## Version
 
-1.0.0
+1.0.1
