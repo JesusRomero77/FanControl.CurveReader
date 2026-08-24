@@ -17,7 +17,7 @@ namespace FanControl.CurveReader
             // 1. Crear el sensor para que Fan Control acepte el plugin
             container.TempSensors.Add(new LoggerSensor());
 
-            // 2. Esperar a que Fan Control y RPC terminen de arrancar e iniciar el arranque del plugin en segundo plano
+            // 2. Esperar a que Fan Control y RPC terminen de arrancar e iniciar el arranque del plugin en segundo plano.
             Thread thread = new Thread(() => { Thread.Sleep(2000); InitialStartup(); }) { IsBackground = true };
             thread.Start();
         }
