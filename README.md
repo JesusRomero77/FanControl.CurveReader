@@ -19,7 +19,7 @@ Logger plugin for Fan Control that records the active profile and changes in sen
 
 Fan Control requires the plugin to create a sensor, which will appear in the list of physical sensors available when selecting a sensor from a sensor card.
 
-The sensor is created only to comply with the Fan Control plugin architecture and is not used to provide any actual sensor data.
+The sensor named "Logger - Curve Reader" is created only to comply with the Fan Control plugin architecture. It always reports 0°C, which does not represent the temperature of any physical component.
 
 ## Version
 
