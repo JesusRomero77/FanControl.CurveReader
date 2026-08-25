@@ -51,7 +51,7 @@ namespace FanControl.CurveReader
 
         public static void WriteLog(string text)
         {
-            const long maxLogSize = 50L * 1024L; // 50 KB
+            const long maxLogSize = 100L * 1024L * 1024L; // 100MB
 
             string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"FanControl");
 
