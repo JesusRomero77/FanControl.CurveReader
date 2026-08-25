@@ -12,7 +12,7 @@ Logger plugin for Fan Control that records the active profile and changes in sen
 
 ## Requirements
 
-- Fan Control v273 or later
+- Tested with Fan Control v273 and later
 - .NET Framework 4.8
 
 ## Operation
