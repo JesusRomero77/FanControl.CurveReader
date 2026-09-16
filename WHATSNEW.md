@@ -2,7 +2,8 @@
 
 ## 1.0.2
 
-- Internal rework of the log purge logic: rewriting the entire log file on every new record (once the 100 MB limit was reached) has been replaced with a purge margin, reducing unnecessary disk writes.
+- Changes to the record purge logic.
+- Added a purge margin when the 100 MB file size limit is reached, to reduce unnecessary disk writes.
 
 ## 1.0.1
 
