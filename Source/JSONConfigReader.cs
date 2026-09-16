@@ -50,7 +50,7 @@ namespace FanControl.CurveReader
             }
             catch (Exception ex)
             {
-                CurveReaderPlugin.WriteLog("ERROR obteniendo información de configuración:\r\n" + ex + "\r\n");
+                LogFileManager.WriteLog("ERROR obteniendo información de configuración:\r\n" + ex + "\r\n");
                 return (null,null);
             }
         }
@@ -131,7 +131,7 @@ namespace FanControl.CurveReader
             }
             catch (Exception ex)
             {
-                CurveReaderPlugin.WriteLog("ERROR leyendo configuración:\r\n" + ex + "\r\n");
+                LogFileManager.WriteLog("ERROR leyendo configuración:\r\n" + ex + "\r\n");
             }
         }
         private static void WriteCurrentConfiguration()
@@ -152,7 +152,8 @@ namespace FanControl.CurveReader
      
             text += "===================================\r\n\r\n";
 
-            CurveReaderPlugin.WriteLog(text);
+            LogFileManager.AddProfileSummary(text);
+            LogFileManager.WriteLog(text);
         }
         public static string GetFileName()
         {

@@ -102,7 +102,7 @@ namespace FanControl.CurveReader
                         sensor.Value = (byte)Math.Round(rpcSensor.Value);
                         if (sensor.Value != sensor.PreviousValue)
                         {
-                            CurveReaderPlugin.WriteLog("[" + DateTime.Now.ToString("dd/MM/yy HH:mm:ss") + "] - SENSOR: Name = " + sensor.Name + " | Value = " + sensor.Value + "\r\n");
+                            LogFileManager.WriteLog("[" + DateTime.Now.ToString("dd/MM/yy HH:mm:ss") + "] - SENSOR: Name = " + sensor.Name + " | Value = " + sensor.Value + "\r\n");
                             sensor.PreviousValue = sensor.Value;
                         }
                         break;
@@ -115,7 +115,7 @@ namespace FanControl.CurveReader
                         control.Value = (byte)Math.Round(rpcControl.Value);
                         if (control.Value != control.PreviousValue)
                         {
-                            CurveReaderPlugin.WriteLog("[" + DateTime.Now.ToString("dd/MM/yy HH:mm:ss") + "] - CONTROL: Name = " + control.Name + " | Value = " + control.Value + "\r\n");
+                            LogFileManager.WriteLog("[" + DateTime.Now.ToString("dd/MM/yy HH:mm:ss") + "] - CONTROL: Name = " + control.Name + " | Value = " + control.Value + "\r\n");
                             control.PreviousValue = control.Value;
                         }
                         break;
