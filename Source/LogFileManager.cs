@@ -181,7 +181,7 @@ namespace FanControl.CurveReader
                     if (firstContentLine >= 0)
                     {
 
-                        if (_profileSummaries.Count == 0) break; // o el control de flujo que corresponda si no hay resumen
+                        if (_profileSummaries.Count == 0) break;
 
                         string[] summaryLines = _profileSummaries[0].Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                         int summaryLineCount = summaryLines.Length;
