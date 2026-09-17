@@ -1,8 +1,9 @@
 # What's New
 
-## 1.0.2
+## 1.1
 
 - Changes to the record purge logic.
+- Fixed issues that could cause the plugin to start incorrectly.
 - Added a purge margin when the 100 MB file size limit is reached, to reduce unnecessary disk writes.
 
 ## 1.0.1
