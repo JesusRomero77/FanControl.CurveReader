@@ -155,64 +155,69 @@ namespace FanControl.CurveReader
             // Eliminamos registros antiguos (en memoria, marcando líneas como null)
             // hasta liberar suficiente espacio; la reescritura del archivo se hace
             // una sola vez, después del bucle, no en cada iteración.
-            if (currentSize + newTextSize > maxLogSize) while (currentSize + newTextSize > maxLogSize * 0.8)
-            {
-                bool removedLine = false;
-
-                for (int i = 0; i < lines.Length; i++) if (lines[i] != null && lines[i].StartsWith("["))
+            if (currentSize + newTextSize > maxLogSize)
+                while (currentSize + newTextSize > maxLogSize * 0.8)
                 {
-                    long lineSize = System.Text.Encoding.UTF8.GetByteCount(lines[i] + Environment.NewLine);
-                    lines[i] = null;
-                    currentSize -= lineSize;
-                    removedLine = true;
-                    break;
-                }
-
-                if (removedLine)
-                {
-                    int firstContentLine = -1;
-
-                    for (int i = 0; i < lines.Length; i++) if (lines[i] != null && !string.IsNullOrWhiteSpace(lines[i]))
-                    {
-                        firstContentLine = i;
-                        break;
-                    }
-
-                    if (firstContentLine >= 0)
-                    {
-
-                        if (_profileSummaries.Count == 0) break;
-
-                        string[] summaryLines = _profileSummaries[0].Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                        int summaryLineCount = summaryLines.Length;
-                        if (summaryLineCount > 0 && summaryLines[summaryLineCount - 1] == string.Empty) summaryLineCount--;
-
-                        int lastSummaryLine  = firstContentLine + summaryLineCount - 1;
-
-                        if (lastSummaryLine >= 0)
+                    bool removedLine = false;
+                    
+                    for (int i = 0; i < lines.Length; i++)
+                        if (lines[i] != null && lines[i].StartsWith("["))
                         {
-                            int nextContentLine = -1;
-
-                            for (int i = lastSummaryLine + 1; i < lines.Length; i++) if (lines[i] != null && !string.IsNullOrWhiteSpace(lines[i]))
+                            long lineSize = System.Text.Encoding.UTF8.GetByteCount(lines[i] + Environment.NewLine);
+                            lines[i] = null;
+                            currentSize -= lineSize;
+                            removedLine = true;
+                            break;
+                        }
+                    
+                    if (removedLine)
+                    {
+                        int firstContentLine = -1;
+                        
+                        for (int i = 0; i < lines.Length; i++)
+                            if (lines[i] != null && !string.IsNullOrWhiteSpace(lines[i]))
                             {
-                                nextContentLine = i;
+                                firstContentLine = i;
                                 break;
                             }
+                        
+                        if (firstContentLine >= 0)
+                        {
+                            if (_profileSummaries.Count == 0) break;
+                            
+                            string[] summaryLines = _profileSummaries[0].Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                            int summaryLineCount = summaryLines.Length;
+                            if (summaryLineCount > 0 && summaryLines[summaryLineCount - 1] == string.Empty) summaryLineCount--;
+                            
+                            int lastSummaryLine  = firstContentLine + summaryLineCount - 1;
 
-                            if (nextContentLine >= 0 && !lines[nextContentLine].StartsWith("[")) DeleteFirstProfileSummary(lines, ref currentSize);
+                            if (lastSummaryLine >= 0)
+                            {
+                                int nextContentLine = -1;
+
+                                for (int i = lastSummaryLine + 1; i < lines.Length; i++)
+                                    if (lines[i] != null && !string.IsNullOrWhiteSpace(lines[i]))
+                                    {
+                                        nextContentLine = i;
+                                        break;
+                                    }
+                                
+                                if (nextContentLine >= 0 && !lines[nextContentLine].StartsWith("[")) DeleteFirstProfileSummary(lines, ref currentSize);
+                            }
                         }
+                        
+                        bool remainingRecords = false;
+                        
+                        for (int i = 0; i < lines.Length; i++)
+                            if (lines[i] != null && lines[i].StartsWith("["))
+                            {
+                                remainingRecords = true;
+                                break;
+                            }
+                        if (!remainingRecords) break;
                     }
-
-                    bool remainingRecords = false;
-
-                    for (int i = 0; i < lines.Length; i++) if (lines[i] != null && lines[i].StartsWith("["))
-                    {
-                        remainingRecords = true;
-                        break;
-                    }
-                    if (!remainingRecords) break;
                 }
-            }
+            
 
             // Reconstruimos el archivo una sola vez, ya con todo el espacio liberado,
             // y añadimos el nuevo texto al final.
