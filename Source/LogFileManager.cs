@@ -68,6 +68,7 @@ namespace FanControl.CurveReader
                 {
                     foreach (string line in keptLines) writer.WriteLine(line);
                 }
+                _logFile.Refresh();
             }
         }
         public static string GetEndOfLogMarker()
@@ -133,6 +134,8 @@ namespace FanControl.CurveReader
 
             Directory.CreateDirectory(_logFile.DirectoryName);
 
+            _logFile.Refresh();
+
             if (!_logFile.Exists)
             {
                 File.WriteAllText(_logFile.FullName, text);
@@ -140,7 +143,7 @@ namespace FanControl.CurveReader
             }
 
             long newTextSize = System.Text.Encoding.UTF8.GetByteCount(text);
-            _logFile.Refresh();
+            
 
             if (_logFile.Length + newTextSize <= maxLogSize)
             {

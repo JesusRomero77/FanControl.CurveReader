@@ -1,6 +1,7 @@
 ﻿using FanControl.Plugins;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace FanControl.CurveReader
@@ -8,7 +9,9 @@ namespace FanControl.CurveReader
     public class CurveReaderPlugin : IPlugin2
     {
         public string Name => "Curve Reader";
-
+        private static bool _isInitializing = false;
+        private static bool _isInitialized = false;
+        private static readonly object _initLock = new object();
         public void Initialize()
         {
         }
@@ -26,27 +29,56 @@ namespace FanControl.CurveReader
         }
         private void InitialStartup()
         {
-            // Ahora empieza realmente el trabajo del plugin...
-            // 4. JSONConfigReader: establece y prepara los objetos de la configuración JSON:
-            JSONConfigReader.SetJSONObjects();
-            // 5. RPCReader: establece y prepara los objetos obtenidos de RPC:
-            RPCReader.SetRPCObjects();
-            // 6. ConfigMatcher: establece las correspondencias entre los sensores y controles de JSON y RPC:
-            ConfigMatcher.SetMatchObjects();
-            // 7. RPCReader: sustituye los objetos obtenidos inicialmente por RPC
-            //    por aquellos que han hecho correspondencia con la configuración JSON activa.
-            RPCReader.SetMatchedObjects();
+            // Evita que dos InitialStartup se ejecuten a la vez y se pisen las listas estáticas.
+            lock (_initLock)
+            {
+                if (_isInitializing) return;
+                _isInitializing = true;
+            }
+            try
+            {
+                // Ahora empieza realmente el trabajo del plugin...
+                // 4. JSONConfigReader: establece y prepara los objetos de la configuración JSON:
+                JSONConfigReader.SetJSONObjects();
+                // 5. RPCReader: establece y prepara los objetos obtenidos de RPC:
+                RPCReader.SetRPCObjects();
+                // 6. ConfigMatcher: establece las correspondencias entre los sensores y controles de JSON y RPC:
+                ConfigMatcher.SetMatchObjects();
+                // 7. RPCReader: sustituye los objetos obtenidos inicialmente por RPC
+                //    por aquellos que han hecho correspondencia con la configuración JSON activa.
+                RPCReader.SetMatchedObjects();
+
+                _isInitialized = true;
+            }
+            catch (Exception ex)
+            {
+                LogFileManager.WriteLog("ERROR en InitialStartup:\r\n" + ex + "\r\n");
+            }
+            finally
+            {
+                _isInitializing = false;
+            }
+
         }
         public void Update()
         {
-            var configInfo = JSONConfigReader.GetCurrentConfigInfo();
-            if (configInfo.FileName != JSONConfigReader.GetFileName() || configInfo.FilePath != JSONConfigReader.GetFilePath())
+            if (!_isInitialized) return;
+            try
             {
-                Thread thread = new Thread(InitialStartup) { IsBackground = true };
-                thread.Start();
+                if (JSONConfigReader.GetCurrentConfigInfo().FileName != JSONConfigReader.GetFileName() ||
+                    JSONConfigReader.GetCurrentConfigInfo().FilePath != JSONConfigReader.GetFilePath())
+                {
+                    Thread thread = new Thread(InitialStartup) { IsBackground = true };
+                    thread.Start();
+                }
+                RPCReader.UpdateValues();
             }
-            RPCReader.UpdateValues();
+            catch (Exception ex)
+            {
+                LogFileManager.WriteLog("ERROR en Update:\r\n" + ex + "\r\n");
+            }
         }
+
         public void Close()
         {
             LogFileManager.WriteLog(LogFileManager.GetEndOfLogMarker());
