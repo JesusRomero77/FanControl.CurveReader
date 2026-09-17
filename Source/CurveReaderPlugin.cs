@@ -62,6 +62,7 @@ namespace FanControl.CurveReader
         }
         public void Update()
         {
+            if (_isInitializing) return;
             if (!_isInitialized) return;
             try
             {
