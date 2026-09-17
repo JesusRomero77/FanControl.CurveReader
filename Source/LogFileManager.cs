@@ -155,7 +155,7 @@ namespace FanControl.CurveReader
             // Eliminamos registros antiguos (en memoria, marcando líneas como null)
             // hasta liberar suficiente espacio; la reescritura del archivo se hace
             // una sola vez, después del bucle, no en cada iteración.
-            while (currentSize + newTextSize > maxLogSize * 0.8)
+            if (currentSize + newTextSize > maxLogSize) while (currentSize + newTextSize > maxLogSize * 0.8)
             {
                 bool removedLine = false;
 
