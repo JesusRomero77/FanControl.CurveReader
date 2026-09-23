@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="CurveReaderConfigurator/CurveReaderConfigurator.csproj" Id="3a1954df-dc6b-450b-bcc1-9e5211949d18">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="FanControl.CurveReader/FanControl.CurveReader.csproj">
+    <BuildType Solution="Debug|Any CPU" Project="Release" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+</Solution>
