@@ -73,6 +73,7 @@ namespace FanControl.CurveReader
                 {
                     Thread thread = new Thread(InitialStartup) { IsBackground = true };
                     thread.Start();
+                    return;
                 }
 
                 RPCReader.UpdateValues();
