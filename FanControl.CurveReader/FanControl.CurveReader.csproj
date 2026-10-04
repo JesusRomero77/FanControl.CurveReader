@@ -4,7 +4,23 @@
     <TargetFramework>net48</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
     <Authors>Jesús Romero</Authors>
-    <VersionPrefix>2.0</VersionPrefix>
+    <VersionPrefix>2.1</VersionPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IsPublishable>True</IsPublishable>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FanControl.IPC">

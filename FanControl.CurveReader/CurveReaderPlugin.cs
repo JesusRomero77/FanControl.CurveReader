@@ -12,6 +12,11 @@ namespace FanControl.CurveReader
         private static bool _isInitializing = false;
         private static bool _isInitialized = false;
         private static readonly object _initLock = new object();
+        
+        public CurveReaderPlugin(IPluginLogger logger)
+        {
+            ErrorLogger.Initialize(logger);
+        }
         public void Initialize()
         {
         }
@@ -52,7 +57,7 @@ namespace FanControl.CurveReader
             }
             catch (Exception ex)
             {
-                LogFileManager.WriteLog("ERROR en InitialStartup:\r\n" + ex + "\r\n");
+                ErrorLogger.Write(ErrorLogger.Severity.Error, ex);
             }
             finally
             {
@@ -68,8 +73,11 @@ namespace FanControl.CurveReader
             if (!_isInitialized) return;
             try
             {
-                if (JSONConfigReader.GetCurrentConfigInfo().FileName != JSONConfigReader.GetFileName() ||
-                    JSONConfigReader.GetCurrentConfigInfo().FilePath != JSONConfigReader.GetFilePath())
+                // Se consulta una sola vez por Update, para que las dos comparaciones usen la misma lectura.
+                var currentConfig = JSONConfigReader.GetCurrentConfigInfo();
+
+                if (currentConfig.FileName != JSONConfigReader.GetFileName() ||
+                    currentConfig.FilePath != JSONConfigReader.GetFilePath())
                 {
                     Thread thread = new Thread(InitialStartup) { IsBackground = true };
                     thread.Start();
@@ -80,7 +88,7 @@ namespace FanControl.CurveReader
             }
             catch (Exception ex)
             {
-                LogFileManager.WriteLog("ERROR en Update:\r\n" + ex + "\r\n");
+                ErrorLogger.Write(ErrorLogger.Severity.Error, ex);
             }
         }
         public void Close()

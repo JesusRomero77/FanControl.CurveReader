@@ -4,14 +4,17 @@ namespace FanControl.CurveReader
 {
     public static class ConfigMatcher
     {
-        private static readonly List<RPCReader.RPCSensor> _matchedSensors = new List<RPCReader.RPCSensor>();
-        private static readonly List<RPCReader.RPCControl> _matchedControls = new List<RPCReader.RPCControl>();
+        private static readonly List<FilteredSensor> _matchedSensors = new List<FilteredSensor>();
+        private static readonly List<FilteredControl> _matchedControls = new List<FilteredControl>();
 
         public static void SetMatchObjects()
         {
             SetMatchSensors();
             SetMatchControls();
         }
+
+        // Empareja cada sensor del JSON con su sensor del RPC (mismo Name e Identifier) y, por cada
+        // pareja encontrada, crea un FilteredSensor con los datos del JSON.
         private static void SetMatchSensors()
         {
             _matchedSensors.Clear();
@@ -28,12 +31,15 @@ namespace FanControl.CurveReader
                     if (string.IsNullOrWhiteSpace(rpcSensor.Name) || string.IsNullOrWhiteSpace(rpcSensor.Identifier)) continue;
                     if (jsonSensor.Name == rpcSensor.Name && jsonSensor.Identifier == rpcSensor.Identifier)
                     {
-                        _matchedSensors.Add(rpcSensor);
+                        _matchedSensors.Add(new FilteredSensor(jsonSensor.Identifier, jsonSensor.Name, jsonSensor.DataSource));
                         break;
                     }
                 }
             }
         }
+
+        // Empareja cada control del JSON con su control del RPC (mismo Identifier) y, por cada
+        // pareja encontrada, crea un FilteredControl con los datos del JSON (el Name es el NickName).
         private static void SetMatchControls()
         {
             _matchedControls.Clear();
@@ -43,18 +49,16 @@ namespace FanControl.CurveReader
                 foreach (RPCReader.RPCControl rpcControl in rpcControls)
                     if (jsonControl.Identifier == rpcControl.Identifier)
                     {
-                        rpcControl.RPCName = rpcControl.Name;
-                        rpcControl.Name = jsonControl.Name;
-                        _matchedControls.Add(rpcControl);
+                        _matchedControls.Add(new FilteredControl(jsonControl.Identifier, jsonControl.Name, jsonControl.DataSource));
                         break;
                     }
         }
 
-        public static List<RPCReader.RPCSensor> GetMatchedSensors()
+        public static List<FilteredSensor> GetMatchedSensors()
         {
             return _matchedSensors;
         }
-        public static List<RPCReader.RPCControl> GetMatchedControls()
+        public static List<FilteredControl> GetMatchedControls()
         {
             return _matchedControls;
         }

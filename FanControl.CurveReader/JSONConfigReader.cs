@@ -7,6 +7,11 @@ namespace FanControl.CurveReader
 {
     public static class JSONConfigReader
     {
+        // Última información leída del CACHE y fecha de modificación del archivo en ese momento.
+        // Mientras la fecha no cambie, se devuelve la información guardada sin volver a leer el archivo.
+        private static readonly object _cacheLock = new object();
+        private static DateTime _cacheLastWriteTimeUtc = DateTime.MinValue;
+        private static (string FileName, string FilePath) _cachedConfigInfo = (null, null);
         private static string _fileName;
         private static string _filePath;
         private static readonly List<Control> _controls = new List<Control>();
@@ -34,24 +39,39 @@ namespace FanControl.CurveReader
 
         public static (string FileName, string FilePath) GetCurrentConfigInfo()
         {
-            try
+            // Se bloquea porque lo llaman a la vez Update (hilo de FanControl) e InitialStartup (hilo propio),
+            // y la fecha y la información guardadas deben cambiar siempre juntas.
+            lock (_cacheLock)
             {
-                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                string configurationsFolder = Path.Combine(baseDirectory, "Configurations");
-                string cachePath = Path.Combine(configurationsFolder, "CACHE");
-                if (!File.Exists(cachePath)) return (null, null);
-                JObject cache = JObject.Parse(File.ReadAllText(cachePath));
-                string fileName = cache["CurrentConfigFileName"]?.ToString();
-                string customConfigFolder = cache["CustomConfigFolder"]?.ToString();
-                if (string.IsNullOrWhiteSpace(fileName)) return (null, null);
-                string configFolder = !string.IsNullOrWhiteSpace(customConfigFolder) ? customConfigFolder : configurationsFolder;
-                string filePath = Path.Combine(configFolder, fileName);
-                return (fileName, filePath);
-            }
-            catch (Exception ex)
-            {
-                LogFileManager.WriteLog("ERROR obteniendo información de configuración:\r\n" + ex + "\r\n");
-                return (null,null);
+                try
+                {
+                    string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                    string configurationsFolder = Path.Combine(baseDirectory, "Configurations");
+                    string cachePath = Path.Combine(configurationsFolder, "CACHE");
+                    if (!File.Exists(cachePath)) return (null, null);
+
+                    // La fecha se lee ANTES del contenido: si FanControl modifica el archivo entre las dos
+                    // operaciones, se guarda la fecha antigua y la siguiente llamada volverá a leerlo.
+                    DateTime lastWriteTimeUtc = File.GetLastWriteTimeUtc(cachePath);
+                    if (lastWriteTimeUtc == _cacheLastWriteTimeUtc) return _cachedConfigInfo;
+
+                    JObject cache = JObject.Parse(File.ReadAllText(cachePath));
+                    string fileName = cache["CurrentConfigFileName"]?.ToString();
+                    string customConfigFolder = cache["CustomConfigFolder"]?.ToString();
+                    if (string.IsNullOrWhiteSpace(fileName)) return (null, null);
+                    string configFolder = !string.IsNullOrWhiteSpace(customConfigFolder) ? customConfigFolder : configurationsFolder;
+                    string filePath = Path.Combine(configFolder, fileName);
+
+                    // Solo se guarda el resultado si la lectura ha ido bien, para que un fallo se reintente.
+                    _cachedConfigInfo = (fileName, filePath);
+                    _cacheLastWriteTimeUtc = lastWriteTimeUtc;
+                    return _cachedConfigInfo;
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Write(ErrorLogger.Severity.Error, ex);
+                    return (null, null);
+                }
             }
         }
         public static void SetJSONObjects()
@@ -133,7 +153,7 @@ namespace FanControl.CurveReader
             }
             catch (Exception ex)
             {
-                LogFileManager.WriteLog("ERROR leyendo configuración:\r\n" + ex + "\r\n");
+                ErrorLogger.Write(ErrorLogger.Severity.Error, ex);
             }
         }
         private static void WriteCurrentConfiguration()
