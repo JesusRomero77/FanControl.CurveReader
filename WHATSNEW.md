@@ -1,5 +1,12 @@
 # What's New
 
+## 2.1
+
+- Plugin errors are now written to FanControl's own log instead of `CurveReader.log`. Each message includes the class and method where the error happened, so it can be told apart from the messages of FanControl and other plugins. `CurveReader.log` now only contains the profile summaries and the logged values.
+- The plugin now checks the modification date of FanControl's `CACHE` file and only reads it again when it has changed, reducing the work done every second.
+- Internal reorganization of the code. What is logged and the format of `CurveReaderLoggerConfig.xml` do not change.
+- CurveReaderConfigurator has no changes; it only receives the new version number.
+
 ## 2.0
 
 - New optional companion app, CurveReaderConfigurator (portable, English and Spanish), to configure the logger per profile. For each sensor and fan control you can choose whether it is logged, the seconds between records (1 to 3600) and the change threshold (1 to 10).
