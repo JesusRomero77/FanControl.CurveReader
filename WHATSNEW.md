@@ -1,5 +1,11 @@
 # What's New
 
+## 2.1.1
+
+- Internal code improvements. Nothing changes in what is logged or in how the plugin is configured.
+- Slightly less work done every second.
+- CurveReaderConfigurator has no changes; it only receives the new version number.
+
 ## 2.1
 
 - Plugin errors are now written to FanControl's own log instead of `CurveReader.log`. Each message includes the class and method where the error happened, so it can be told apart from the messages of FanControl and other plugins. `CurveReader.log` now only contains the profile summaries and the logged values.
