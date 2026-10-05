@@ -90,30 +90,62 @@ namespace FanControl.CurveReader
         {
             return _rpcControls;
         }
+
+        // Lee los datos del RPC y recorre los sensores y controles vigilados para decidir
+        // si cada uno debe registrarse.
         public static void UpdateValues()
         {
             SetRPCData();
 
-            // Sensores: busca el valor actual de cada uno en los datos del RPC y lo escribe en el log
-            // solo si su filtro lo permite (la decisión la toma el propio FilteredSensor).
-            foreach (FilteredSensor sensor in _filteredSensors)
-                foreach (SensorMessage rpcSensor in _rpcData)
-                    if (sensor.Identifier == rpcSensor.Identifier)
-                    {
-                        if (sensor.Update((byte)Math.Round(rpcSensor.Value)))
-                            LogFileManager.WriteLog("[" + DateTime.Now.ToString("dd/MM/yy HH:mm:ss") + "] - SENSOR: Name = " + sensor.Name + " | Value = " + sensor.Value + "\r\n");
-                        break;
-                    }
+            foreach (FilteredSensor filteredSensor in _filteredSensors)
+                UpdateElement(filteredSensor);
 
-            // Controles: misma lógica que los sensores.
-            foreach (FilteredControl control in _filteredControls)
-                foreach (SensorMessage rpcControl in _rpcData)
-                    if (control.Identifier == rpcControl.Identifier)
-                    {
-                        if (control.Update((byte)Math.Round(rpcControl.Value)))
-                            LogFileManager.WriteLog("[" + DateTime.Now.ToString("dd/MM/yy HH:mm:ss") + "] - CONTROL: Name = " + control.Name + " | Value = " + control.Value + "\r\n");
-                        break;
-                    }
+            foreach (FilteredControl filteredControl in _filteredControls)
+                UpdateElement(filteredControl);
+        }
+
+        // Decide si un sensor o control debe escribirse en el log y, si es así, lo escribe. Se descartan
+        // en orden los que no toca registrar (no incluidos, o dentro de su intervalo de descanso) sin tocar
+        // su valor. Solo a los que llegan hasta el final se les actualiza el valor, y entonces se comprueba
+        // el umbral de cambio. La decisión la toma este método; el elemento solo aporta su filtro y su estado.
+        private static void UpdateElement(ILoggableElement element)
+        {
+            if (!element.Filter.IncludedInLog) return;
+
+            element.SecondsSinceLastLog++;
+            if (element.HasBeenLogged && element.SecondsSinceLastLog < element.Filter.IntervalSeconds) return;
+
+            if (!GetRPCValue(element.Identifier, out byte value)) return;
+            element.Value = value;
+
+            if (element.HasBeenLogged && Math.Abs(element.Value - element.LastLoggedValue) < element.Filter.Threshold) return;
+
+            element.LastLoggedValue = element.Value;
+            element.HasBeenLogged = true;
+            element.SecondsSinceLastLog = 0;
+            LogFileManager.WriteLog("[" + DateTime.Now.ToString("dd/MM/yy HH:mm:ss") + "] - " + GetElementTypeName(element) + ": Name = " + element.Name + " | Value = " + element.Value + "\r\n");
+        }
+
+        // Devuelve el tipo de elemento para el log a partir del nombre de su clase:
+        // FilteredSensor -> SENSOR, FilteredControl -> CONTROL.
+        private static string GetElementTypeName(ILoggableElement element)
+        {
+            return element.GetType().Name.Replace("Filtered", "").ToUpperInvariant();
+        }
+
+        // Busca en los datos del RPC el elemento con ese Identifier y devuelve su valor redondeado.
+        // Devuelve false si el RPC no lo incluye en esta lectura.
+        private static bool GetRPCValue(string identifier, out byte value)
+        {
+            foreach (SensorMessage rpcElement in _rpcData)
+                if (rpcElement.Identifier == identifier)
+                {
+                    value = (byte)Math.Round(rpcElement.Value);
+                    return true;
+                }
+
+            value = 0;
+            return false;
         }
         private class CurveCalculator
         {

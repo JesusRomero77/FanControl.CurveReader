@@ -4,7 +4,7 @@
     /// Configuración de filtrado de un elemento de FanControl. Es inmutable: se crea una sola vez
     /// con todos sus valores (normalmente por LoggerConfigReader, a partir del XML) y no cambia.
     /// Si solo se indica el Identifier, el resto toma los valores por defecto.
-    /// Solo guarda datos; la decisión de registrar la toma la clase filtrada que lo posee.
+    /// Solo guarda datos; la decisión de registrar la toma RPCReader.
     /// </summary>
     public class Filter
     {

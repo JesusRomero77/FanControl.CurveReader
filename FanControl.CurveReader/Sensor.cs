@@ -10,8 +10,8 @@
         // (SelectedTempSource.Identifier en el JSON de FanControl).
         public string DataSource { get; }
 
-        // Valor actual del sensor, redondeado; se actualiza en cada lectura de FanControl.
-        public byte Value { get; internal set; }
+        // Último valor leído del sensor, redondeado; RPCReader solo lo actualiza cuando le toca registrarse.
+        public byte Value { get; set; }
 
         public Sensor(string identifier, string name, string dataSource) : base(identifier, name)
         {
