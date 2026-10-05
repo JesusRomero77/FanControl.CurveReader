@@ -2,8 +2,8 @@
 
 ## 2.1.1
 
-- Internal code improvements. Nothing changes in what is logged or in how the plugin is configured.
-- Slightly less work done every second.
+- Internal code improvements. Slightly less work is done every second.
+- Nothing changes in what is logged or in how the plugin is configured.
 - CurveReaderConfigurator has no changes; it only receives the new version number.
 
 ## 2.1
