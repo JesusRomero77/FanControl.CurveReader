@@ -11,6 +11,7 @@ namespace CurveReaderConfigurator
     /// </summary>
     public static class LoggerConfigFile
     {
+        private const string LanguageAttributeName = "Language";
         private const string FolderName = "FanControl";
         private const string FileName = "CurveReaderLoggerConfig.xml";
         private const string IntervalSecondsAttributeName = "IntervalSeconds";
@@ -55,7 +56,7 @@ namespace CurveReaderConfigurator
                     error = "El archivo de configuración no tiene el formato esperado.";
                     return null;
                 }
-
+                config.LanguageName = (string)document.Root.Attribute(LanguageAttributeName);
                 foreach (XElement profileElement in document.Root.Elements(ProfileElementName))
                 {
                     string fileName = (string)profileElement.Attribute(FileNameAttributeName);
@@ -88,6 +89,9 @@ namespace CurveReaderConfigurator
             {
                 XElement root = new XElement(RootElementName,
                     new XAttribute(VersionAttributeName, LoggerConfig.CurrentVersion));
+
+                if (!string.IsNullOrWhiteSpace(config.LanguageName))
+                    root.Add(new XAttribute(LanguageAttributeName, config.LanguageName));
 
                 foreach (ProfileConfig profile in config.Profiles)
                 {

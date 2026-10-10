@@ -1,4 +1,6 @@
-﻿namespace CurveReaderConfigurator
+﻿using System;
+
+namespace CurveReaderConfigurator
 {
     partial class ConfiguratorForm
     {
@@ -36,8 +38,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.englishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.spanishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fanControlPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,26 +103,9 @@
             // 
             // languageToolStripMenuItem
             // 
-            this.languageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.englishToolStripMenuItem,
-            this.spanishToolStripMenuItem});
             this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
             this.languageToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.languageToolStripMenuItem.Text = "Idioma";
-            // 
-            // englishToolStripMenuItem
-            // 
-            this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-            this.englishToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.englishToolStripMenuItem.Text = "Inglés";
-            this.englishToolStripMenuItem.Click += new System.EventHandler(this.EnglishToolStripMenuItem_Click);
-            // 
-            // spanishToolStripMenuItem
-            // 
-            this.spanishToolStripMenuItem.Name = "spanishToolStripMenuItem";
-            this.spanishToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.spanishToolStripMenuItem.Text = "Español";
-            this.spanishToolStripMenuItem.Click += new System.EventHandler(this.SpanishToolStripMenuItem_Click);
             // 
             // fanControlPathToolStripMenuItem
             // 
@@ -143,14 +126,14 @@
             // viewHelpToolStripMenuItem
             // 
             this.viewHelpToolStripMenuItem.Name = "viewHelpToolStripMenuItem";
-            this.viewHelpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewHelpToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.viewHelpToolStripMenuItem.Text = "Ver la Ayuda";
             this.viewHelpToolStripMenuItem.Click += new System.EventHandler(this.ViewHelpToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.aboutToolStripMenuItem.Text = "Acerca de...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -226,6 +209,10 @@
 
         }
 
+        // Provisionales: solo para que el diseñador pueda abrirse. Se borran en el paso 3.
+        private void EnglishToolStripMenuItem_Click(object sender, EventArgs e) { }
+        private void SpanishToolStripMenuItem_Click(object sender, EventArgs e) { }
+
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -236,8 +223,6 @@
         private System.Windows.Forms.ToolStripMenuItem configurationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fanControlPathToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem languageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem spanishToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem englishToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;

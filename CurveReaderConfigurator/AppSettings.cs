@@ -44,22 +44,19 @@ namespace CurveReaderConfigurator
         }
 
         /// <summary>
-        /// Idioma guardado. Si no hay ninguno (o el valor no es válido), devuelve el que se
-        /// pasa como 'defaultLanguage'.
+        /// Nombre del idioma guardado. Si no hay ninguno, devuelve el que se pasa como
+        /// 'defaultLanguageName'. Si el idioma guardado ya no existe, Translator.SetLanguage lo ignora.
         /// </summary>
-        public static AppLanguage LoadLanguage(AppLanguage defaultLanguage)
+        public static string LoadLanguage(string defaultLanguageName)
         {
-            AppLanguage language;
-            bool isValid = Enum.TryParse(ReadValue(LanguageElementName), out language)
-                           && Enum.IsDefined(typeof(AppLanguage), language);
+            string languageName = ReadValue(LanguageElementName);
+            return string.IsNullOrEmpty(languageName) ? defaultLanguageName : languageName;
+        }
+        public static void SaveLanguage(string languageName)
+        {
+            WriteValue(LanguageElementName, languageName);
+        }
 
-            return isValid ? language : defaultLanguage;
-        }
-        public static void SaveLanguage(AppLanguage language)
-        {
-            WriteValue(LanguageElementName, language.ToString());
-        }
-        
         /// <summary>
         /// Lee el valor de un elemento del archivo. Devuelve null si el archivo o el elemento no
         /// existen o no se pueden leer: un archivo dañado no debe impedir que la app arranque.

@@ -58,6 +58,12 @@ namespace CurveReaderConfigurator
     {
         public const int CurrentVersion = 1;
 
+        /// <summary>
+        /// Idioma elegido en el configurador (el nombre de la clase de idioma, por ejemplo "Español").
+        /// El plugin escribe el log en ese idioma. Es null si todavía no se ha elegido ninguno.
+        /// </summary>
+        public string LanguageName { get; set; }
+
         public List<ProfileConfig> Profiles { get; } = new List<ProfileConfig>();
 
         /// <summary>

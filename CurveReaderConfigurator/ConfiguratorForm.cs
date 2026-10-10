@@ -31,8 +31,10 @@ namespace CurveReaderConfigurator
 
         private void ConfiguratorForm_Load(object sender, EventArgs e)
         {
-            // Idioma guardado por el usuario; si no hay ninguno, se mantiene el de por defecto (inglés).
-            Translator.SetLanguage(AppSettings.LoadLanguage(Translator.CurrentLanguage));
+            // Se crea una entrada de menú por cada idioma disponible; después se aplica el idioma
+            // guardado por el usuario o, si no hay ninguno, se mantiene el de por defecto (inglés).
+            BuildLanguageMenu();
+            Translator.SetLanguage(AppSettings.LoadLanguage(Translator.CurrentLanguageName));
             ApplyLanguage();
 
             // Si el usuario ya eligió antes la ruta de FanControl, se recupera para no pedirla de nuevo.
@@ -125,29 +127,56 @@ namespace CurveReaderConfigurator
 
             // Los nombres de los idiomas no se traducen: cada uno aparece en su propio idioma,
             // así quien se encuentre la app en un idioma que no entiende puede encontrar el suyo.
-            englishToolStripMenuItem.Text = "English";
-            spanishToolStripMenuItem.Text = "Español";
-            englishToolStripMenuItem.Checked = Translator.CurrentLanguage == AppLanguage.English;
-            spanishToolStripMenuItem.Checked = Translator.CurrentLanguage == AppLanguage.Spanish;
+            // Aquí solo se marca cuál es el activo.
+            foreach (ToolStripMenuItem item in languageToolStripMenuItem.DropDownItems)
+                item.Checked = (string)item.Tag == Translator.CurrentLanguageName;
 
             // Los textos del panel (títulos y notas) también cambian con el idioma.
             BuildProfileConfigPanel();
         }
 
-        // Menú Configuración > Idioma > English: cambia la interfaz a inglés.
-        private void EnglishToolStripMenuItem_Click(object sender, EventArgs e)
+        // Crea una entrada en el menú Configuración > Idioma por cada idioma disponible. El nombre
+        // del idioma se guarda en Tag para saber cuál se ha elegido cuando el usuario hace clic.
+        private void BuildLanguageMenu()
         {
-            Translator.SetLanguage(AppLanguage.English);
-            AppSettings.SaveLanguage(AppLanguage.English);
-            ApplyLanguage();
+            languageToolStripMenuItem.DropDownItems.Clear();
+
+            foreach (string languageName in Translator.AvailableLanguageNames)
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem(languageName) { Tag = languageName };
+                item.Click += LanguageToolStripMenuItem_Click;
+                languageToolStripMenuItem.DropDownItems.Add(item);
+            }
         }
 
-        // Menú Configuración > Idioma > Español: cambia la interfaz a español.
-        private void SpanishToolStripMenuItem_Click(object sender, EventArgs e)
+        // Clic en cualquier idioma del menú: cambia la interfaz a ese idioma y lo recuerda,
+        // tanto en los ajustes de la app como en el XML del logger, para que el plugin lo use.
+        private void LanguageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Translator.SetLanguage(AppLanguage.Spanish);
-            AppSettings.SaveLanguage(AppLanguage.Spanish);
+            string languageName = (string)((ToolStripMenuItem)sender).Tag;
+
+            Translator.SetLanguage(languageName);
+            AppSettings.SaveLanguage(languageName);
             ApplyLanguage();
+            SaveLanguageToLoggerConfig();
+        }
+
+        // Guarda el idioma elegido en el archivo de configuración del logger. Solo toca el idioma:
+        // los cambios de perfiles que aún no se han guardado siguen pendientes hasta Archivo > Guardar.
+        private void SaveLanguageToLoggerConfig()
+        {
+            string error;
+            LoggerConfig storedConfig = LoggerConfigFile.Load(out error);
+            if (storedConfig == null)
+            {
+                MessageBox.Show(this, error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            storedConfig.LanguageName = Translator.CurrentLanguageName;
+
+            if (!LoggerConfigFile.Save(storedConfig, out error))
+                MessageBox.Show(this, error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         // Al elegir un perfil: si ya se abrió antes en esta sesión, se recuperan sus ajustes con los cambios
@@ -208,6 +237,8 @@ namespace CurveReaderConfigurator
                 MessageBox.Show(this, error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            // El idioma también se guarda aquí, por si el XML se creó antes de elegirlo.
+            storedConfig.LanguageName = Translator.CurrentLanguageName;
 
             // Cada perfil abierto reemplaza en su sitio al guardado con el mismo nombre de archivo,
             // o se añade al final si aún no tenía configuración.

@@ -96,6 +96,7 @@
     <Compile Include="HelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Language.cs" />
     <Compile Include="LoggerConfig.cs" />
     <Compile Include="LoggerConfigFile.cs" />
     <Compile Include="ProfileConfigBuilder.cs" />
