@@ -51,6 +51,7 @@ CurveReaderConfigurator is an optional, portable app (a single .exe, no installa
 4. Save from the File menu.
 
 The app only reads Fan Control's profile files and never modifies them. The app's own settings are stored in `CurveReaderConfiguratorSettings.xml`, in `%LocalAppData%\FanControl`.
+
 The language chosen in the app is also saved in `CurveReaderLoggerConfig.xml` and used by the plugin to write the log. Without the app, the log is written in English.
 
 ## Fan Control sensor
