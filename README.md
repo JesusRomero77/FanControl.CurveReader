@@ -10,6 +10,7 @@ Logger plugin for Fan Control that records the active profile and changes in sen
 - Logs changes in sensor values.
 - Logs changes in fan control values.
 - Optional per-profile configuration: choose which sensors and fan controls are logged, how often each one is checked and how much its value must change before it is recorded.
+- Optional log language: English (default) or Spanish, chosen in the companion app.
 
 ## Requirements
 
