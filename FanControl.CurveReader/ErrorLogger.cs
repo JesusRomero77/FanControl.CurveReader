@@ -68,7 +68,6 @@ namespace FanControl.CurveReader
         // método, el 1 es Write y el 2 es el código que llamó. NoInlining evita que el compilador
         // fusione métodos y cambie esa posición.
         [MethodImpl(MethodImplOptions.NoInlining)]
-
         private static string GetOrigin()
         {
             MethodBase method = new StackFrame(2, false).GetMethod();
