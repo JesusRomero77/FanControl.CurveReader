@@ -123,16 +123,16 @@ namespace FanControl.CurveReader
             element.LastLoggedValue = element.Value;
             element.HasBeenLogged = true;
             element.SecondsSinceLastLog = 0;
-            LogFileManager.WriteLog("[" + DateTime.Now.ToString("dd/MM/yy HH:mm:ss") + "] - " + GetElementTypeName(element) + ": Name = " + element.Name + " | Value = " + element.Value + "\r\n");
+            LogFileManager.WriteLog("[" + DateTime.Now.ToString("dd/MM/yy HH:mm:ss") + "] - " + GetElementTypeName(element)
+                + ": " + Translator.Translate(TextId.RecordNameLabel) + " = " + element.Name
+                + " | " + Translator.Translate(TextId.RecordValueLabel) + " = " + element.Value + "\r\n");
         }
 
-        // Devuelve el tipo de elemento para el log a partir del nombre de su clase:
-        // FilteredSensor -> SENSOR, FilteredControl -> CONTROL.
+        // Devuelve el tipo de elemento para el log, en el idioma actual: sensor o control.
         private static string GetElementTypeName(ILoggableElement element)
         {
-            return element.GetType().Name.Replace("Filtered", "").ToUpperInvariant();
+            return Translator.Translate(element is FilteredSensor ? TextId.SensorType : TextId.ControlType);
         }
-
         // Busca en los datos del RPC el elemento con ese Identifier y devuelve su valor redondeado.
         // Devuelve false si el RPC no lo incluye en esta lectura.
         private static bool GetRPCValue(string identifier, out byte value)

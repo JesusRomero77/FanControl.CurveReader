@@ -9,6 +9,7 @@ namespace FanControl.CurveReader
 {
     public static class LoggerConfigReader
     {
+        private const string LanguageAttributeName = "Language";
         private const string ConfigFileName = "CurveReaderLoggerConfig.xml";
         private const int MinIntervalSeconds = 1;
         private const int MaxIntervalSeconds = 3600;
@@ -26,7 +27,8 @@ namespace FanControl.CurveReader
             _controlFilters.Clear();
             _sensorFilters.Clear();
 
-            if (string.IsNullOrWhiteSpace(profileFileName)) return;
+            // Mientras no se lea otro idioma del XML, el log se escribe en el de por defecto (inglés).
+            Translator.SetLanguage(null);
 
             try
             {
@@ -37,6 +39,13 @@ namespace FanControl.CurveReader
                 if (!File.Exists(configPath)) return;
 
                 XDocument document = XDocument.Load(configPath);
+
+                // El idioma del log lo elige el usuario en el configurador y se guarda en la raíz del XML.
+                // Si falta o no existe en el plugin, se mantiene el de por defecto.
+                Translator.SetLanguage((string)document.Root.Attribute(LanguageAttributeName));
+
+                if (string.IsNullOrWhiteSpace(profileFileName)) return;
+
                 XElement profile = null;
                 foreach (XElement candidate in document.Root.Elements("Profile"))
                 {
@@ -59,7 +68,6 @@ namespace FanControl.CurveReader
                 ErrorLogger.Write(Error, ex);
             }
         }
-
         // Devuelve el filtro de un control por su Identifier, o uno con valores por defecto si no está.
         public static Filter GetControlFilter(string identifier)
         {

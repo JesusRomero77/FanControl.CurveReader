@@ -17,6 +17,8 @@ namespace FanControl.CurveReader
         private static readonly List<Control> _controls = new List<Control>();
         private static readonly List<Curve> _curves = new List<Curve>();
         private static readonly List<Sensor> _sensors = new List<Sensor>();
+        // Ancho de las líneas de "=" del resumen del perfil activo.
+        private const int SummaryWidth = 35;
 
         public class Control
         {
@@ -158,21 +160,21 @@ namespace FanControl.CurveReader
         }
         private static void WriteCurrentConfiguration()
         {
-            string text = "\r\n\r\n========== PERFIL ACTIVO ==========\r\n";
+            string text = "\r\n\r\n" + LogFileManager.BuildHeader(Translator.Translate(TextId.ActiveProfile), SummaryWidth) + "\r\n";
 
-            text += "Nombre: " + Path.GetFileNameWithoutExtension(GetFileName()) + "\r\n";
-            text += "Ruta: " + GetFilePath() + "\r\n";
-            text += "===================================\r\n\r\n";
-            text += "CONTROLES:\r\n";
+            text += Translator.Translate(TextId.ProfileNameLabel) + " " + Path.GetFileNameWithoutExtension(GetFileName()) + "\r\n";
+            text += Translator.Translate(TextId.ProfilePathLabel) + " " + GetFilePath() + "\r\n";
+            text += new string('=', SummaryWidth) + "\r\n\r\n";
+            text += Translator.Translate(TextId.ControlsHeading) + "\r\n";
             foreach (Control control in GetJSONControls()) text += "- " + control.Name + "\r\n";
 
-            text += "\r\nCURVAS:\r\n";
+            text += "\r\n" + Translator.Translate(TextId.CurvesHeading) + "\r\n";
             foreach (Curve curve in GetJSONCurves()) text += "- " + curve.Name + "\r\n";
-           
-            text += "\r\nSENSORES:\r\n";
+
+            text += "\r\n" + Translator.Translate(TextId.SensorsHeading) + "\r\n";
             foreach (Sensor sensor in GetJSONSensors()) text += "- " + sensor.Name + "\r\n";
-     
-            text += "===================================\r\n\r\n";
+
+            text += new string('=', SummaryWidth) + "\r\n\r\n";
 
             LogFileManager.AddProfileSummary(text);
             LogFileManager.WriteLog(text);

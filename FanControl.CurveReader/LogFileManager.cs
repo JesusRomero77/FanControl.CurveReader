@@ -9,9 +9,37 @@ namespace FanControl.CurveReader
 {
     internal class LogFileManager
     {
-        private const string EndOfLogMarker = "============ FIN DEL LOG ============";
+
+        private const int EndOfLogMarkerWidth = 37; // Ancho de la línea de la marca de fin de log, con el título centrado entre signos "=".
         private static readonly FileInfo _logFile = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FanControl", "CurveReader.log"));
         private static readonly List<string> _profileSummaries = new List<string>();
+
+        // Construye una cabecera del log: el título centrado entre signos "=" hasta el ancho indicado.
+        // Así quien añada un idioma no tiene que contar los signos a mano.
+        public static string BuildHeader(string title, int width)
+        {
+            int fill = Math.Max(2, width - title.Length - 2);
+            int left = fill / 2;
+            int right = fill - left;
+            return new string('=', left) + " " + title + " " + new string('=', right);
+        }
+
+        // Marca de fin de log en el idioma actual.
+        public static string GetEndOfLogMarker()
+        {
+            return BuildHeader(Translator.Translate(TextId.EndOfLog), EndOfLogMarkerWidth);
+        }
+
+        // Indica si la línea es la marca de fin de log en cualquiera de los idiomas, porque el
+        // idioma pudo cambiar desde la última vez que el plugin escribió el log.
+        private static bool IsEndOfLogMarker(string line)
+        {
+            string trimmed = line.Trim();
+            foreach (string title in Translator.GetTextInAllLanguages(TextId.EndOfLog))
+                if (trimmed == BuildHeader(title, EndOfLogMarkerWidth)) return true;
+
+            return false;
+        }
         public static void AddProfileSummary(string summary)
         {
             _profileSummaries.Add(summary);
@@ -31,7 +59,7 @@ namespace FanControl.CurveReader
             // hasta la tercera) para añadirlo a la lista mediante AddProfileSummary.
             foreach (string line in lines)
             {
-                if (line.Trim() == EndOfLogMarker)
+                if (IsEndOfLogMarker(line))
                 {
                     markerFound = true;
                     continue;
@@ -70,10 +98,6 @@ namespace FanControl.CurveReader
                 }
                 _logFile.Refresh();
             }
-        }
-        public static string GetEndOfLogMarker()
-        {
-            return EndOfLogMarker;
         }
         private static void DeleteFirstProfileSummary(string[] lines, ref long currentSize)
         {
