@@ -1,5 +1,14 @@
 # What's New
 
+## 2.2
+
+- The language chosen in CurveReaderConfigurator is now also used by the plugin to write `CurveReader.log`: the profile summary headings, the `Name` / `Value` labels and the element types (`SENSOR`, `CONTROL`) of each record. In Spanish they appear as `Nombre`, `Valor`, and so on.
+- The chosen language is saved in `CurveReaderLoggerConfig.xml` as a new optional `Language` attribute. The rest of the format does not change, and files saved by earlier versions keep working. The plugin reads it when it starts and whenever the active profile changes.
+- The log is now written in English by default. Before, the profile summary and some messages were always in Spanish. Without the app, or without a saved language, everything is in English; choose Spanish in the app to get it in Spanish.
+- Messages the plugin sends to FanControl's own log (such as "Unknown origin") also follow the chosen language.
+- The language menu of CurveReaderConfigurator is now built from the available languages, so adding a new language only requires adding a new class to the `Language.cs` file in the code of both the configurator and the plugin, and then recompiling the configurator and the plugin.
+- The language saved by earlier versions of the app is not carried over: choose it again in Settings > Language.
+
 ## 2.1.1
 
 - Internal code improvements. Slightly less work is done every second.
