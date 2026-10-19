@@ -60,6 +60,12 @@ Fan Control requires the plugin to create a sensor, which will appear in the lis
 
 The sensor named "Logger - Curve Reader" is created only to comply with the Fan Control plugin architecture. It always reports 0°C, which does not represent the temperature of any physical component.
 
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+CurveReaderConfigurator embeds [Newtonsoft.Json](https://www.newtonsoft.com/json) (MIT). See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for details. Fan Control and the libraries it provides to plugins are not part of this repository and remain under their own licenses. This project is not affiliated with Fan Control.
+
 ## Version
 
 2.2
