@@ -68,4 +68,4 @@ CurveReaderConfigurator embeds [Newtonsoft.Json](https://www.newtonsoft.com/json
 
 ## Version
 
-2.2
+2.3
