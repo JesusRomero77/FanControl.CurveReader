@@ -11,7 +11,7 @@ namespace CurveReaderConfigurator
     {
         public const bool DefaultIncludedInLog = true;
         public const int DefaultThreshold = 1;
-        public const int MinThreshold = 1;
+        public const int MinThreshold = 0;
         public const int MaxThreshold = 10;
         public const int DefaultIntervalSeconds = 1;
         public const int MinIntervalSeconds = 1;
@@ -34,7 +34,8 @@ namespace CurveReaderConfigurator
 
         /// <summary>
         /// Cambio mínimo, en unidades enteras, respecto al último valor registrado
-        /// para que se escriba una nueva línea en el log.
+        /// para que se escriba una nueva línea en el log. Con 0 se escribe siempre
+        /// que se cumpla el intervalo, aunque el valor no haya cambiado.
         /// </summary>
         public int Threshold { get; set; } = DefaultThreshold;
     }
