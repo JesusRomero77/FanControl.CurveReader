@@ -1,5 +1,11 @@
 # What's New
 
+## 2.3
+
+- The change threshold now accepts 0 (range 0 to 10). With 0, an element is recorded every time its interval passes, even if its value has not changed. The default stays at 1, which records any change.
+- CurveReaderConfigurator offers the new value in the threshold list. Both the plugin and the app need to be updated for 0 to work: an older plugin treats a saved 0 as 1.
+- With a threshold of 0 and a short interval the log grows quickly, so a longer interval is recommended.
+
 ## 2.2
 
 - The language chosen in CurveReaderConfigurator is now also used by the plugin to write `CurveReader.log`: the profile summary headings, the `Name` / `Value` labels and the element types (`SENSOR`, `CONTROL`) of each record. In Spanish they appear as `Nombre`, `Valor`, and so on.
