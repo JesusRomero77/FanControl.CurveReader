@@ -33,7 +33,7 @@ To customize this behavior, use the optional companion app (see below). For each
 
 - **Log**: whether it is recorded in the log or not.
 - **Interval**: seconds (1 to 3600) the element waits after being recorded before it is checked again. Useful for values that change slowly or that you do not need every second.
-- **Threshold**: minimum change (0 to 10) from the last recorded value required to record a new entry.
+- **Threshold**: minimum change (0 to 10) from the last recorded value required to record a new entry. With 0, the element is recorded every time its interval passes, even if its value has not changed.
 
 Once the interval has passed, the element is checked every second and a new entry is written as soon as its value differs from the last recorded one by at least the threshold. The first reading of each element is always recorded.
 
