@@ -17,7 +17,9 @@
         // Segundos que el elemento deja de vigilarse tras un registro (1-3600).
         public int IntervalSeconds { get; }
 
-        // Diferencia mínima (>=) respecto al último valor escrito para registrar (1-10).
+        // Diferencia mínima (>=) respecto al último valor escrito para registrar (0-10).
+        // Con 0 se registra siempre que se cumpla el intervalo, aunque el valor no haya cambiado;
+        // con 1 se registra cualquier cambio.
         public int Threshold { get; }
 
         // Valores por defecto para un elemento concreto: registrándolo, comprobando

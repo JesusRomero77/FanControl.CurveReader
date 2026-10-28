@@ -13,7 +13,7 @@ namespace FanControl.CurveReader
         private const string ConfigFileName = "CurveReaderLoggerConfig.xml";
         private const int MinIntervalSeconds = 1;
         private const int MaxIntervalSeconds = 3600;
-        private const int MinThreshold = 1;
+        private const int MinThreshold = 0;
         private const int MaxThreshold = 10;
 
         private static readonly Dictionary<string, Filter> _controlFilters = new Dictionary<string, Filter>();
