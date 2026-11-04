@@ -37,6 +37,8 @@ To customize this behavior, use the optional companion app (see below). For each
 
 Once the interval has passed, the element is checked every second and a new entry is written as soon as its value differs from the last recorded one by at least the threshold. The first reading of each element is always recorded.
 
+**Tip:** If you want to know how long a sensor or fan control remains at the same value, you can use the default threshold of 1 and check the time between consecutive entries for that element. This provides the same information without setting the threshold to 0, helping keep the log file smaller.
+
 Settings are saved per profile in `CurveReaderLoggerConfig.xml`, located in `%LocalAppData%\FanControl`. The plugin reads this file when it starts and whenever the active profile changes. If you save changes for the profile that is currently active, they are applied the next time that profile is loaded or Fan Control is restarted. Profiles without saved settings use the defaults: everything logged, interval 1 second, threshold 1.
 
 Curves are listed in the profile summary, but their values are not logged.
