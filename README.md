@@ -45,22 +45,25 @@ Curves are listed in the profile summary, but their values are not logged.
 
 ## Companion app
 
-CurveReaderConfigurator is an optional, portable app (a single .exe, no installation) available in English and Spanish. It requires Windows and .NET Framework 4.8. Download it from the same release as the plugin.
+### Recommended: WatchTower
 
-1. Run the app and, from its configuration menu, indicate where FanControl.exe (or a shortcut to it) is.
-2. Choose a profile. The active Fan Control profile is selected by default.
-3. Adjust the log option, interval and threshold of each sensor and fan control.
-4. Save from the File menu.
+The recommended way to configure CurveReader is [WatchTower](https://github.com/JesusRomero77/FanControl.WatchTower), a portable program (a single .exe, no installation, available in English and Spanish) that configures CurveReader and the other plugins of the family (RemoteSensors and DataServer) in one place. It requires Windows and .NET Framework 4.8. **WatchTower is the configurator that will keep receiving support and new features.**
 
-The app only reads Fan Control's profile files and never modifies them. The app's own settings are stored in `CurveReaderConfiguratorSettings.xml`, in `%LocalAppData%\FanControl`.
+1. Download `WatchTower.exe` from the WatchTower Releases page and run it.
+2. In its Settings menu, use "Specify FanControl path" and indicate where FanControl.exe (or a shortcut to it) is.
+3. Open the CurveReader tab and choose a profile. The active Fan Control profile is selected by default.
+4. Adjust the log option, interval and threshold of each sensor and fan control.
+5. Save from the File menu.
 
-The language chosen in the app is also saved in `CurveReaderLoggerConfig.xml` and used by the plugin to write the log. Without the app, the log is written in English.
+### CurveReaderConfigurator
 
-## Fan Control sensor
+CurveReaderConfigurator is the original companion app. It only configures CurveReader and it is still included in this release for those who prefer a small app dedicated to this plugin. It receives no new features and may be removed in a future version, so new users should choose WatchTower. It requires Windows and .NET Framework 4.8 and is available in English and Spanish. Download it from the same release as the plugin.
 
-Fan Control requires the plugin to create a sensor, which will appear in the list of physical sensors available when selecting a sensor from a sensor card.
+Both apps save the same `CurveReaderLoggerConfig.xml`, so you can use either of them. The steps are the same: indicate where FanControl.exe is, choose a profile, adjust each sensor and fan control, and save from the File menu.
 
-The sensor named "Logger - Curve Reader" is created only to comply with the Fan Control plugin architecture. It always reports 0°C, which does not represent the temperature of any physical component.
+Neither app modifies Fan Control's profile files; they only read them. CurveReaderConfigurator's own settings are stored in `CurveReaderConfiguratorSettings.xml`, in `%LocalAppData%\FanControl`.
+
+The language chosen in either app is also saved in `CurveReaderLoggerConfig.xml` and used by the plugin to write the log. Without an app, the log is written in English.
 
 ## License
 
