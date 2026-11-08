@@ -65,6 +65,12 @@ Neither app modifies Fan Control's profile files; they only read them. CurveRead
 
 The language chosen in either app is also saved in `CurveReaderLoggerConfig.xml` and used by the plugin to write the log. Without an app, the log is written in English.
 
+## Fan Control sensor
+
+Fan Control requires the plugin to create a sensor, which will appear in the list of physical sensors available when selecting a sensor from a sensor card.
+
+The sensor named "Logger - Curve Reader" is created only to comply with the Fan Control plugin architecture. It always reports 0°C, which does not represent the temperature of any physical component.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
