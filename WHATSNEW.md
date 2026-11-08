@@ -1,5 +1,7 @@
 # What's New
 
+> **WatchTower:** CurveReader can now also be configured with [WatchTower](https://github.com/JesusRomero77/FanControl.WatchTower), a program that configures the whole family of plugins. It saves the same `CurveReaderLoggerConfig.xml`, so CurveReader 2.3 works with it without any change. WatchTower is the recommended configurator and the one that will keep receiving support; CurveReaderConfigurator remains available but receives no new features.
+
 ## 2.3
 
 - The change threshold now accepts 0 (range 0 to 10). With 0, an element is recorded every time its interval passes, even if its value has not changed. The default stays at 1, which records any change.
